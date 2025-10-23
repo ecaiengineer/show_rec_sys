@@ -16,9 +16,9 @@ class RecSysModel(nn.Module):
                 show_embedding_dim, 
                 asset_type_embedding_dim, 
                 hidden_dim, 
-                output_dim, 
-                dropout=0.2, 
-                sequence_length=None
+                output_dim,
+                num_lstm_layers=1,
+                dropout=0.2
         ):
         """
         Initialize the RecSysModel with LSTM architecture.
@@ -38,8 +38,7 @@ class RecSysModel(nn.Module):
         self.input_dim = self.show_embedding_dim + self.asset_type_embedding_dim + 1 # + 1 for watch minutes
         self.hidden_dim = hidden_dim
         self.output_dim = output_dim
-        self.num_layers = 1
-        self.sequence_length = sequence_length
+        self.num_layers = num_lstm_layers
 
         # Embedding layers
         self.embedding_show = nn.Embedding(num_shows, show_embedding_dim)

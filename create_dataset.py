@@ -44,7 +44,12 @@ window_size = 20
 dataset = []
 inference_dataset = []
 
-for user_id in df['user_id'].unique():
+for user_num, user_id in enumerate(df['user_id'].unique()):
+    
+    # print progress every 1000 users
+    if user_num % 1000 == 0:
+        print(f"Processing user {user_num} of {len(df['user_id'].unique())}")
+    
     user_df = df[df['user_id'] == user_id].sort_values(by=['relative_time']).reset_index(drop=True)
     intervals = list(range(len(user_df)-1, 0, -window_size-1))
 
@@ -54,6 +59,10 @@ for user_id in df['user_id'].unique():
             segment = user_df.iloc[0:i]
         else:
             segment = user_df.iloc[i-window_size:i]
+
+        if index == 0:
+            # override the segment for the inference data
+            segment = user_df.iloc[i-window_size+1:]
         
         segment_data = {
             'show_id': segment['show_id'].values,
@@ -64,9 +73,6 @@ for user_id in df['user_id'].unique():
         if index == 0:
             # very first segment is reserved for inference
             # remove first element from segment_data and add target to the end
-            segment_data['show_id'] = np.concatenate([segment_data['show_id'][1:], [target]])
-            segment_data['asset_type'] = np.concatenate([segment_data['asset_type'][1:], [target]])
-            segment_data['watch_minutes'] = np.concatenate([segment_data['watch_minutes'][1:], [target]])
             inference_dataset.append({'user_id': user_id, 'inputs': segment_data, 'target': None})
         else:
             dataset.append({'user_id': user_id, 'inputs': segment_data, 'target': target})
