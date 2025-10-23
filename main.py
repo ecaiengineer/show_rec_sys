@@ -6,6 +6,7 @@ from model import RecSysModel, train_model, evaluate_model
 # Configuration
 dataset_path = 'data/processed_dataset_window20.pkl'
 all_shows_and_asset_types_path = 'data/all_shows_and_asset_types.pkl'
+model_path = 'artifacts/recsys_model_with_gpu.pth'
 batch_size = 512
 num_epochs = 5
 learning_rate = 0.001
@@ -44,7 +45,6 @@ model = RecSysModel(
 
 print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")
 
-a = 1
 
 # Train the model
 print(f"\nStarting training...")
@@ -57,10 +57,10 @@ history = train_model(
     device=device
 )
 
-# # Evaluate on test set
-# print(f"\nEvaluating on test set...")
-# test_results = evaluate_model(model, test_loader, device=device)
+# save the model
+torch.save(model.state_dict(), model_path)
 
-# print(f"\nTraining completed!")
-# print(f"Final test accuracy: {test_results['test_accuracy']:.2f}%")
-
+# Evaluate on test set
+print(f"\nEvaluating on test set...")
+test_results = evaluate_model(model, test_loader, device=device)
+print(f"\nTraining completed!")

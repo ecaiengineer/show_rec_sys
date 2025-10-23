@@ -39,6 +39,7 @@ all_asset_types = all_shows_and_asset_types['all_asset_types']
 ```
 Loads the complete lists of unique shows and asset types (CHANNEL, RECORDING, VOD) from the dataset.
 
+
 ### 3. Device Selection (Lines 20-22)
 ```python
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -74,6 +75,10 @@ Calls `train_model()` from `model.py` to:
 
 ### 7. Evaluation (Lines 60-65, currently commented out)
 Optional evaluation on the test set using `evaluate_model()` to measure final performance.
+
+Train Loss: 0.0507, Train 10-Recall: 99.56%
+Val Loss: 0.0844, Val 10-Recall: 99.47%
+
 
 ## Functions Called by `main.py`
 
